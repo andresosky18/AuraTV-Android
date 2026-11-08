@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AURA TV v2.1 - Android TV</title>
+    <link rel="stylesheet" href="styles.css?v=2.5.0" />
+</head>
+<body>
+    <div id="stageWrapper">
+        <div id="scene" class="scene">
+            <!-- Fallback HTML5 Video (usado si se prueba desde el navegador fuera del APK) -->
+            <video id="fallbackVideo" class="abs" style="display:none; background:#000; object-fit:fill;" playsinline autoplay></video>
+
+            <!-- Fondo base OLED Negro Puro (#000000) cuando el reproductor no está en pantalla completa -->
+            <div id="sceneBg" class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+
+            <!-- 1. Splash Group (Pantalla de Carga OLED Black Moderna — Sin texto) -->
+            <div id="splashGroup" class="group">
+                <div class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+                <div class="abs splash-ambient-glow" style="left:0; top:0; width:1280px; height:720px;"></div>
+                <div class="abs splash-center-wrap" style="left:390px; top:250px; width:500px; height:220px;">
+                    <img src="images/aura_logo_inner.png" style="width:280px; height:78px; object-fit:contain; filter:drop-shadow(0 8px 24px rgba(0,0,0,0.85));" />
+                    <div class="splash-loader-track">
+                        <div class="splash-loader-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Launcher / Home Screen (Diseño Moderno OLED Black inspirado en Playbox + IPTV Modern) -->
+            <div id="launcherGroup" class="group hidden">
+                <div class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+                <div class="abs oled-ambient-glow" style="left:0; top:0; width:1280px; height:720px;"></div>
+
+                <!-- Header Superior: Logo a la izquierda, Reloj/Fecha centrados, Iconos circulares a la derecha -->
+                <img class="abs" src="images/aura_logo_inner.png" style="left:68px; top:42px; width:210px; height:58px; object-fit:contain;" />
+
+                <div id="launcherClockLabel" class="label center" style="left:490px; top:32px; width:300px; height:46px; font-size:38px; font-weight:700; letter-spacing:0.8px; color:#FFFFFF;">18:57</div>
+                <div id="launcherDateLabel" class="label hidden" style="left:0; top:0; width:1px; height:1px;"></div>
+                <div id="launcherDate2Label" class="label center" style="left:460px; top:80px; width:360px; height:22px; font-size:15px; font-weight:500; color:#8E9BB0;">Sunday, Nov 1</div>
+
+                <!-- Píldoras circulares superiores derechas -->
+                <div class="abs header-circle-btn" style="left:1084px; top:42px; width:46px; height:46px;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </div>
+                <div class="abs header-circle-btn" style="left:1142px; top:42px; width:46px; height:46px;">
+                    <img id="launcherSyncIcon" src="images/refresh.png" style="width:22px; height:22px; object-fit:contain; opacity:0.9;" />
+                </div>
+                <div class="abs header-circle-btn" style="left:1200px; top:42px; width:46px; height:46px;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </div>
+
+                <!-- Tarjetas Centrales Modernas -->
+                <div id="launcherTilesGroup" class="abs" style="left:118px; top:180px;"></div>
+
+                <!-- Barra de estado de canales en vivo -->
+                <div id="launcherChannelStatsLabel" class="label font-small center" style="left:145px; top:476px; width:990px; height:28px; color:#64748B;"></div>
+
+                <!-- Footer Inferior Estilo Moderno OLED -->
+                <div id="webLabel" class="label font-small-bold" style="left:68px; top:626px; width:460px; height:24px; color:#94A3B8;">Portal: https://auratv.site.je</div>
+                <div class="label font-small" style="left:68px; top:654px; width:360px; height:22px; color:#64748B;">Auto-Sync Active (3s)  ·  Status: Online</div>
+
+                <div id="macLabel" class="label font-small-bold right" style="left:780px; top:626px; width:432px; height:24px; color:#E2E8F0;">MAC Address: 94:23:87:99:03:15</div>
+                <div id="launcherVersionLabel" class="label font-small right" style="left:780px; top:654px; width:432px; height:22px; color:#64748B;">Version: 2.1 OLED Edition</div>
+            </div>
+
+            <!-- 3. Regional (Live TV) UI — OLED Black -->
+            <div id="regionalGroup" class="group hidden">
+                <!-- Fondo OLED con recorte transparente automático en [560,102,445,320] cuando hay vista previa activa -->
+                <div id="regionalBgLayer" class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+
+                <!-- Barra superior de cristales oscuros sobre OLED -->
+                <div class="abs glass-header-box" style="left:56px; top:30px; width:382px; height:54px;"></div>
+                <div class="abs" style="left:74px; top:47px; width:10px; height:20px; border-radius:4px; background:#00E5A3;"></div>
+                <div id="regionalTitleLabel" class="label font-medium-bold" style="left:96px; top:42px; width:320px; height:30px; letter-spacing:0.6px;">CANALES</div>
+
+                <div class="abs glass-header-box" style="left:454px; top:30px; width:516px; height:54px;"></div>
+                <div id="regionalChannelStatsLabel" class="label font-small-bold center" style="left:466px; top:43px; width:492px; height:28px; color:#D8E4F8;"></div>
+
+                <div class="abs glass-header-box" style="left:986px; top:30px; width:128px; height:54px;"></div>
+                <div id="syncStatusLabel" class="label font-small-bold center" style="left:992px; top:45px; width:116px; height:24px; color:#38BDF8;"></div>
+
+                <div class="abs glass-header-box" style="left:1126px; top:30px; width:98px; height:54px;"></div>
+                <div id="clockLabel" class="label font-medium-bold center" style="left:1126px; top:43px; width:98px; height:28px; color:#FFFFFF;">16:28</div>
+
+                <!-- Lista lateral de Categorías / Canales -->
+                <div id="leftNavGroup" class="abs" style="left:56px; top:102px;"></div>
+
+                <!-- Marco del reproductor de vista previa -->
+                <div id="previewFrameBg" class="abs" style="left:556px; top:98px; width:453px; height:328px; background:#05070B; border:1px solid rgba(255,255,255,0.14); border-radius:12px;"></div>
+                <img id="previewPoster" class="abs" src="images/preview.jpg" style="left:560px; top:102px; width:445px; height:320px; object-fit:fill; border-radius:8px;" />
+                <div id="previewStatusOverlay" class="abs stream-overlay hidden" style="left:560px; top:102px; width:445px; height:320px;">
+                    <div class="stream-overlay-card">
+                        <div id="previewStatusIcon" class="stream-status-icon">!</div>
+                        <div id="previewStatusTitle" class="stream-status-title">Canal no disponible en el momento</div>
+                        <div id="previewStatusSubtitle" class="stream-status-sub">Presiona OK para reintentar o selecciona otro canal</div>
+                    </div>
+                </div>
+
+                <!-- Guía EPG debajo del reproductor -->
+                <div id="programListGroup" class="abs" style="left:492px; top:440px;"></div>
+                <!-- Selector de días a la derecha -->
+                <div id="daysGroup" class="abs" style="left:1100px; top:102px;"></div>
+            </div>
+
+            <!-- 4. Search UI — OLED Black -->
+            <div id="searchGroup" class="group hidden">
+                <div class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+                <div id="searchChannelsGroup" class="abs" style="left:58px; top:30px;"></div>
+                <div id="searchKeyboardGroup" class="abs" style="left:482px; top:252px;"></div>
+                <div id="searchInputBg" class="abs" style="left:482px; top:192px; width:640px; height:46px; background:#111726; border:1px solid rgba(255,255,255,0.16); border-radius:12px;"></div>
+                <div class="label font-small-bold center" style="left:496px; top:202px; width:28px; height:26px; color:#38BDF8;">⌕</div>
+                <div id="searchQueryLabel" class="label font-medium-bold" style="left:532px; top:203px; width:570px; height:24px; color:#F8FAFC;"></div>
+            </div>
+
+            <!-- 5. Movies Library powered by installed Add-ons — OLED Black -->
+            <div id="moviesGroup" class="group hidden">
+                <div class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+                <img class="abs" src="images/aura_logo_inner.png" style="left:58px; top:36px; width:190px; height:54px; object-fit:contain;" />
+                <div id="moviesTitleLabel" class="label font-large-bold" style="left:68px; top:104px; width:260px; height:44px;">Movies</div>
+                <div id="movieCatalogHeadingLabel" class="label font-small-bold" style="left:68px; top:164px; width:245px; height:26px; color:#64748B; letter-spacing:1px;">CATALOGS</div>
+                <div id="movieCatalogGroup" class="abs" style="left:64px; top:202px;"></div>
+                <div id="movieStatusLabel" class="label font-small-bold" style="left:342px; top:112px; width:830px; height:30px; color:#94A3B8;"></div>
+                <div id="movieGridGroup" class="abs" style="left:342px; top:158px;"></div>
+                <div id="movieInstallHintLabel" class="label font-small" style="left:342px; top:654px; width:670px; height:24px; color:#64748B;"></div>
+                <div id="moviePageLabel" class="label font-small-bold right" style="left:1010px; top:654px; width:180px; height:24px; color:#94A3B8;"></div>
+
+                <div id="movieDetailGroup" class="group hidden">
+                    <div class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+                    <img id="movieDetailBackdrop" class="abs" src="" style="left:0; top:0; width:1280px; height:720px; object-fit:fill; opacity:0.28; display:none;" />
+                    <div class="abs" style="left:0; top:0; width:1280px; height:720px; background:linear-gradient(90deg, #000000 25%, rgba(0,0,0,0.72) 100%);"></div>
+                    <img id="movieDetailPoster" class="abs" src="images/movies_safe.png" style="left:88px; top:112px; width:252px; height:370px; object-fit:fill; border-radius:16px; border:1px solid rgba(255,255,255,0.15);" />
+                    <div id="movieDetailTitle" class="label font-large-bold" style="left:390px; top:116px; width:760px; height:58px;"></div>
+                    <div id="movieDetailMeta" class="label font-small-bold" style="left:392px; top:184px; width:760px; height:30px; color:#38BDF8;"></div>
+                    <div id="movieDetailDescription" class="label font-medium wrap" style="left:392px; top:234px; width:740px; height:220px; color:#CBD5E1;"></div>
+                    <div id="moviePlayBg" class="abs" style="left:390px; top:486px; width:230px; height:56px; background:#FFFFFF; border-radius:14px;"></div>
+                    <div id="moviePlayLabel" class="label font-medium-bold center" style="left:390px; top:499px; width:230px; height:30px; color:#090D16;">▶  PLAY</div>
+                    <div id="movieDetailHintLabel" class="label font-small" style="left:390px; top:564px; width:700px; height:28px; color:#64748B;"></div>
+                    <div id="movieDetailStatusLabel" class="label font-small-bold" style="left:390px; top:606px; width:700px; height:28px; color:#38BDF8;"></div>
+                </div>
+            </div>
+
+            <!-- 6. Player OSD UI (transparente sobre ExoPlayer nativo, auto-oculta a los 8s) -->
+            <div id="playerGroup" class="group hidden">
+                <!-- Estado de reconexión o canal no disponible en pantalla completa -->
+                <div id="playerStreamStatusBadge" class="abs stream-overlay-full hidden" style="left:320px; top:48px; width:640px;">
+                    <div id="playerStreamStatusTitle" class="stream-status-title-full">Canal no disponible en el momento</div>
+                    <div id="playerStreamStatusSub" class="stream-status-sub-full">Presiona OK para reintentar o ▲/▼ para cambiar de canal</div>
+                </div>
+
+                <!-- Mini-Guía Lateral en Pantalla Completa (se abre con ◀ Izquierda sin salir del video) -->
+                <div id="playerMiniGuide" class="abs mini-guide-drawer hidden" style="left:28px; top:36px; width:392px; height:648px;">
+                    <div class="label font-medium-bold" style="left:22px; top:18px; width:260px; height:28px; color:#FFFFFF;">Canales en Vivo</div>
+                    <div id="miniGuideSubLabel" class="label font-small" style="left:22px; top:46px; width:348px; height:20px; color:#94A3B8;">▲/▼ Explorar · OK Cambiar · ▶/Back Cerrar</div>
+                    <div id="miniGuideRowsGroup" class="abs" style="left:16px; top:78px; width:360px; height:554px;"></div>
+                </div>
+
+                <!-- Banner inferior OSD sobrio estilo AURA TV que aparece 8 segundos y se desvanece -->
+                <div id="playerBannerBox" class="abs osd-banner" style="left:90px; top:576px; width:1100px; height:94px;">
+                    <div class="abs osd-banner-surface" style="left:0; top:0; width:1100px; height:94px;"></div>
+                    <div id="playerNumberLabel" class="label font-large-bold center" style="left:18px; top:24px; width:96px; height:44px; color:#182235;">1</div>
+                    <div class="abs" style="left:122px; top:18px; width:2px; height:58px; background:rgba(24,34,53,0.16);"></div>
+                    <img id="playerChannelLogo" class="abs hidden" src="" style="left:138px; top:21px; width:52px; height:52px; object-fit:contain; border-radius:8px; background:rgba(24,34,53,0.06); padding:4px;" />
+                    <div id="playerNameLabel" class="label font-large-bold" style="left:202px; top:14px; width:560px; height:36px; color:#182235;">Canal</div>
+                    <div id="playerCategoryLabel" class="label font-small-bold" style="left:204px; top:49px; width:360px; height:20px; color:#4A5B78;"></div>
+                    <div id="playerBadgesRow" class="abs" style="left:570px; top:48px; display:flex; gap:8px; align-items:center;">
+                        <span id="playerFavBadge" class="osd-meta-pill hidden">★ FAVORITO</span>
+                        <span id="playerResBadge" class="osd-meta-pill">LIVE</span>
+                        <span id="playerAspectBadge" class="osd-meta-pill">16:9</span>
+                    </div>
+                    <div id="playerHintSub" class="label font-small" style="left:204px; top:70px; width:660px; height:18px; font-size:12px; color:#52637E;">◀ Mini-Guía  ·  ▶ Último canal  ·  OK Aspecto  ·  0-9 Ir a canal</div>
+                    <div id="playerDateLabel" class="label font-small-bold right" style="left:870px; top:18px; width:202px; height:24px; color:#2B3952;"></div>
+                    <div id="playerTimeLabel" class="label font-medium-bold right" style="left:870px; top:46px; width:202px; height:26px; color:#182235;"></div>
+                </div>
+            </div>
+
+            <!-- 7. Playlists Screen — Rediseño Moderno OLED Black (sin cuadros grises flotantes) -->
+            <div id="playlistsGroup" class="group hidden">
+                <div class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+                <img class="abs" src="images/aura_logo_inner.png" style="left:68px; top:40px; width:180px; height:50px; object-fit:contain;" />
+
+                <div id="playlistsTitleLabel" class="label font-large-bold" style="left:230px; top:52px; width:360px; height:44px;">Playlists</div>
+
+                <!-- Barra de herramientas moderna con iconos vectoriales limpios -->
+                <div id="playlistToolbarGroup" class="abs" style="left:786px; top:50px;">
+                    <div id="refreshBtnBg" class="abs modern-icon-btn" style="left:0; top:0; width:56px; height:48px;"></div>
+                    <img id="playlistRefreshIcon" class="abs" src="images/refresh.png" style="left:15px; top:11px; width:26px; height:26px; object-fit:contain;" />
+
+                    <div id="addBtnBg" class="abs modern-icon-btn" style="left:68px; top:0; width:56px; height:48px;"></div>
+                    <div class="label font-large-bold center" style="left:68px; top:0; width:56px; height:46px; pointer-events:none;">+</div>
+                </div>
+
+                <!-- Lista de Playlists -->
+                <div id="playlistRowsGroup" class="abs" style="left:230px; top:130px;"></div>
+
+                <!-- Botón de eliminar moderno con icono SVG limpio -->
+                <div id="trashBtnBg" class="abs modern-icon-btn" style="left:924px; top:130px; width:58px; height:58px;"></div>
+                <div class="abs" style="left:941px; top:147px; width:24px; height:24px; pointer-events:none;">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </div>
+
+                <!-- Tarjeta inferior de ayuda, QR y credenciales directas del TV -->
+                <div class="abs oled-card" style="left:230px; top:506px; width:752px; height:152px;"></div>
+                <div id="playlistHelpLabel1" class="label font-small-bold" style="left:256px; top:522px; width:570px; height:24px; color:#F1F5F9;"></div>
+                <div id="playlistHelpLabel2" class="label font-small" style="left:256px; top:548px; width:570px; height:22px; color:#94A3B8;"></div>
+                <div id="playlistsCredentialsLabel" class="label font-small-bold" style="left:256px; top:578px; width:570px; height:26px; color:#FACC15; letter-spacing:0.4px;">MAC: --  ·  Device Key: ------</div>
+                <div id="playlistSyncStatus" class="label font-small-bold" style="left:256px; top:612px; width:570px; height:26px; color:#10B981;"></div>
+                <div class="abs" style="left:842px; top:518px; width:124px; height:124px; background:#FFFFFF; border-radius:14px; padding:7px;">
+                    <img id="playlistsQrImg" src="images/device_qr.png" style="width:110px; height:110px; object-fit:contain;" />
+                </div>
+            </div>
+
+            <!-- 8. Add Playlist UI — OLED Black -->
+            <div id="addPlaylistGroup" class="group hidden">
+                <div class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+                <div class="abs oled-card" style="left:150px; top:38px; width:980px; height:636px;"></div>
+
+                <div id="addPlaylistTitleLabel" class="label font-large-bold" style="left:196px; top:62px; width:420px; height:42px;">Add Playlist</div>
+
+                <div id="xtreamTabBg" class="abs ui-row-bg" style="left:196px; top:122px; width:220px; height:50px; background:#FFFFFF;"></div>
+                <div id="xtreamTabLabel" class="label font-medium-bold center" style="left:196px; top:134px; width:220px; height:26px; color:#090D16;">Xtream Account</div>
+
+                <div id="m3uTabBg" class="abs ui-row-bg" style="left:430px; top:122px; width:220px; height:50px; background:#141C2B;"></div>
+                <div id="m3uTabLabel" class="label font-medium-bold center" style="left:430px; top:134px; width:220px; height:26px; color:#E2E8F0;">M3U URL</div>
+
+                <div id="addPlaylistFieldsGroup" class="abs" style="left:196px; top:196px;"></div>
+
+                <div id="cancelBtnBg" class="abs ui-row-bg" style="left:196px; top:408px; width:150px; height:48px; background:#141C2B;"></div>
+                <div id="cancelBtnLabel" class="label font-small-bold center" style="left:196px; top:420px; width:150px; height:24px;">Cancel</div>
+
+                <div id="okBtnBg" class="abs ui-row-bg" style="left:362px; top:408px; width:150px; height:48px; background:#141C2B;"></div>
+                <div id="okBtnLabel" class="label font-small-bold center" style="left:362px; top:420px; width:150px; height:24px;">Save</div>
+
+                <div id="addInfoLabel1" class="label font-small-bold" style="left:196px; top:500px; width:650px; height:24px; color:#CBD5E1;">To add playlist from our website visit</div>
+                <div id="portalUrlLabel" class="label font-small-bold" style="left:196px; top:528px; width:400px; height:26px; color:#38BDF8;">https://auratv.site.je</div>
+                <div id="addInfoLabel2" class="label font-small" style="left:196px; top:556px; width:650px; height:22px; color:#94A3B8;">or scan the QR code on the right</div>
+                <div id="addPlaylistCredentialsLabel" class="label font-small-bold" style="left:196px; top:584px; width:650px; height:26px; color:#FACC15; letter-spacing:0.4px;">MAC: --  ·  Device Key: ------</div>
+
+                <div class="abs" style="left:878px; top:434px; width:196px; height:196px; background:#FFFFFF; border-radius:16px; padding:10px;">
+                    <img id="addPlaylistQrImg" src="images/device_qr.png" style="width:176px; height:176px; object-fit:contain;" />
+                </div>
+                <div id="addPlaylistStatus" class="label font-small-bold" style="left:196px; top:618px; width:650px; height:24px; color:#10B981;"></div>
+            </div>
+
+            <!-- 9. Add-ons Management Screen — OLED Black -->
+            <div id="addonsGroup" class="group hidden">
+                <div class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+                <img class="abs" src="images/aura_logo_inner.png" style="left:68px; top:40px; width:190px; height:54px; object-fit:contain;" />
+                <div id="addonsTitleLabel" class="label font-large-bold" style="left:68px; top:112px; width:300px; height:44px;">Add-ons</div>
+                <div id="addonsSubtitleLabel" class="label font-small-bold" style="left:68px; top:162px; width:560px; height:26px; color:#64748B; letter-spacing:0.6px;"></div>
+                <div id="addonsRowsGroup" class="abs" style="left:68px; top:210px;"></div>
+
+                <!-- Tarjeta derecha moderna con QR -->
+                <div class="abs oled-card" style="left:752px; top:154px; width:448px; height:468px;"></div>
+                <div id="addonsHelpTitleLabel" class="label font-medium-bold" style="left:792px; top:188px; width:368px; height:34px; color:#FFFFFF;"></div>
+                <div id="addonsHelpBodyLabel" class="label font-small wrap" style="left:792px; top:232px; width:368px; height:110px; color:#94A3B8;"></div>
+                <div class="abs" style="left:880px; top:358px; width:192px; height:192px; background:#FFFFFF; border-radius:16px; padding:10px;">
+                    <img src="images/device_qr.png" style="width:172px; height:172px; object-fit:contain;" />
+                </div>
+                <div id="addonsPortalLabel" class="label font-small-bold center" style="left:792px; top:568px; width:368px; height:28px; color:#38BDF8;">https://auratv.site.je</div>
+                <div id="addonsStatusLabel" class="label font-small-bold" style="left:68px; top:648px; width:650px; height:24px; color:#94A3B8;"></div>
+            </div>
+
+            <!-- 10. Settings UI — Rediseño Moderno OLED Black con switches tipo píldora e iconos limpios -->
+            <div id="settingsGroup" class="group hidden">
+                <div class="abs oled-bg" style="left:0; top:0; width:1280px; height:720px;"></div>
+                <img class="abs" src="images/aura_logo_inner.png" style="left:68px; top:40px; width:180px; height:50px; object-fit:contain;" />
+
+                <div id="settingsTitleLabel" class="label font-large-bold" style="left:330px; top:66px; width:400px; height:44px;">Settings</div>
+                <div id="settingsRowsGroup" class="abs" style="left:330px; top:140px;"></div>
+
+                <!-- Tarjeta inferior con credenciales del dispositivo -->
+                <div class="abs oled-card" style="left:330px; top:492px; width:620px; height:128px;"></div>
+                <div id="deviceKeyLabel" class="label font-medium-bold" style="left:362px; top:514px; width:550px; height:28px; color:#38BDF8;">Your device key: 862416</div>
+                <div id="settingsMacLabel" class="label font-small-bold" style="left:362px; top:550px; width:550px; height:24px; color:#E2E8F0;">Your MAC: 94:23:87:99:03:15</div>
+                <div class="label font-small" style="left:362px; top:580px; width:550px; height:22px; color:#64748B;">Version: 2.1  ·  Portal: https://auratv.site.je</div>
+            </div>
+
+            <!-- 11. Generic text entry overlay -->
+            <div id="entryOverlayGroup" class="group hidden">
+                <div class="abs" style="left:0; top:0; width:1280px; height:720px; background:rgba(0,0,0,0.82);"></div>
+                <div class="abs oled-card" style="left:265px; top:120px; width:750px; height:480px;"></div>
+                <div id="entryTitleLabel" class="label font-medium-bold" style="left:315px; top:152px; width:650px; height:34px;">Enter value</div>
+                <div class="abs" style="left:315px; top:202px; width:650px; height:50px; background:#141C2B; border:1px solid rgba(56,189,248,0.45); border-radius:12px;"></div>
+                <div id="entryValueLabel" class="label font-medium-bold" style="left:335px; top:214px; width:610px; height:26px; color:#FFFFFF;"></div>
+                <div id="entryKeyboardGroup" class="abs" style="left:315px; top:278px;"></div>
+            </div>
+
+            <!-- 12. Language selector modal -->
+            <div id="languageGroup" class="group hidden">
+                <div class="abs" style="left:0; top:0; width:1280px; height:720px; background:rgba(0,0,0,0.82);"></div>
+                <div class="abs oled-card" style="left:390px; top:180px; width:500px; height:356px;"></div>
+                <div id="languageTitleLabel" class="label font-large-bold center" style="left:430px; top:216px; width:420px; height:42px;">Seleccionar idioma</div>
+
+                <div id="languageBg0" class="abs ui-row-bg" style="left:455px; top:286px; width:370px; height:52px; background:#FFFFFF;"></div>
+                <div id="languageLabel0" class="label font-medium-bold center" style="left:455px; top:298px; width:370px; height:28px; color:#090D16;">Español</div>
+
+                <div id="languageBg1" class="abs ui-row-bg" style="left:455px; top:350px; width:370px; height:52px; background:#151E2E;"></div>
+                <div id="languageLabel1" class="label font-medium-bold center" style="left:455px; top:362px; width:370px; height:28px;">English</div>
+
+                <div id="languageBg2" class="abs ui-row-bg" style="left:455px; top:414px; width:370px; height:52px; background:#151E2E;"></div>
+                <div id="languageLabel2" class="label font-medium-bold center" style="left:455px; top:426px; width:370px; height:28px;">Chinese</div>
+
+                <div id="languageHintLabel" class="label font-small center" style="left:430px; top:488px; width:420px; height:24px; color:#64748B;">OK para seleccionar · Back para cancelar</div>
+            </div>
+
+            <!-- 13. Simple modal for soon / alerts -->
+            <div id="soonGroup" class="group hidden">
+                <div class="abs" style="left:0; top:0; width:1280px; height:720px; background:rgba(0,0,0,0.82);"></div>
+                <div class="abs oled-card" style="left:380px; top:240px; width:520px; height:190px;"></div>
+                <div id="soonTitleLabel" class="label font-large-bold center" style="left:420px; top:274px; width:440px; height:36px;">Próximamente</div>
+                <div id="soonTextLabel" class="label font-small center" style="left:410px; top:324px; width:460px; height:24px; color:#CBD5E1;">Esta sección estará disponible más adelante.</div>
+                <div id="soonCloseLabel" class="label font-small center" style="left:430px; top:376px; width:420px; height:20px; color:#64748B;">Presiona OK o Back para cerrar</div>
+            </div>
+
+            <div id="footerHintLabel" class="label font-small" style="left:20px; top:690px; width:1240px; height:24px; color:#64748B;"></div>
+
+            <!-- Recuadro de cambio directo por número de canal (0-9) -->
+            <div id="numericZapBox" class="abs numeric-zap-overlay hidden" style="left:996px; top:34px; width:246px; min-height:82px;">
+                <div id="numericZapNumber" style="font-size:34px; font-weight:800; color:#FFFFFF; letter-spacing:2px;">118</div>
+                <div id="numericZapName" style="font-size:14px; font-weight:600; color:#38BDF8; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:220px;">Canal</div>
+            </div>
+
+            <!-- Notificación rápida (Favoritos, Relación de Aspecto, Último canal) -->
+            <div id="auraToastBox" class="abs aura-toast hidden" style="left:440px; top:38px; width:400px; height:46px;"></div>
+        </div>
+    </div>
+
+    <script src="app.js?v=2.3.0"></script>
+</body>
+</html>

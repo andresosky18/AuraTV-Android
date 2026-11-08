@@ -1,0 +1,499 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+    font-family: "Inter", "Roboto", "Segoe UI", Arial, sans-serif;
+    color: #FFFFFF;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+#stageWrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+.scene {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: transparent;
+}
+
+.group {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    height: 720px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.abs {
+    position: absolute;
+}
+
+/* Fondo OLED Negro Puro (#000000) */
+.oled-bg {
+    background: #000000;
+}
+
+/* Resplandor ambiental ultra sutil detrás de las tarjetas sobre negro OLED */
+.oled-ambient-glow {
+    background:
+        radial-gradient(circle at 28% 44%, rgba(14, 165, 233, 0.09) 0%, transparent 42%),
+        radial-gradient(circle at 72% 42%, rgba(139, 92, 246, 0.08) 0%, transparent 42%);
+    pointer-events: none;
+}
+
+.oled-card {
+    background: #0B0F19;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 20px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
+}
+
+.glass-header-box {
+    background: #0C111D;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+}
+
+.header-circle-btn {
+    background: #0F1523;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modern-icon-btn {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+    transition: background-color 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.label {
+    position: absolute;
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.label.wrap {
+    white-space: normal;
+    align-items: flex-start;
+    overflow: hidden;
+    line-height: 1.42;
+}
+
+.label.center {
+    justify-content: center;
+    text-align: center;
+}
+
+.label.right {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.font-small {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.font-small-bold {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.font-medium {
+    font-size: 19px;
+    font-weight: 400;
+}
+
+.font-medium-bold {
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.font-large {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.font-large-bold {
+    font-size: 32px;
+    font-weight: 800;
+}
+
+/* Hueco transparente en [560, 102, 445x320] para el ExoPlayer nativo de Android TV */
+.preview-hole {
+    clip-path: polygon(
+        0% 0%, 0% 100%, 560px 100%, 560px 102px,
+        1005px 102px, 1005px 422px, 560px 422px, 560px 100%,
+        100% 100%, 100% 0%
+    );
+}
+
+@keyframes auraSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.sync-spinning {
+    animation: auraSpin 0.85s linear infinite;
+    transform-origin: 50% 50%;
+}
+
+/* Pantalla de carga (Splash) OLED Black Moderna */
+.splash-ambient-glow {
+    background:
+        radial-gradient(circle at 50% 44%, rgba(250, 204, 21, 0.08) 0%, rgba(14, 116, 144, 0.07) 32%, rgba(0, 0, 0, 0) 68%);
+    pointer-events: none;
+}
+
+.splash-center-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.splash-badge-sub {
+    margin-top: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3.5px;
+    color: #94A3B8;
+    text-transform: uppercase;
+}
+
+.splash-loader-track {
+    margin-top: 32px;
+    width: 240px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.09);
+    overflow: hidden;
+    position: relative;
+}
+
+@keyframes auraSplashLoad {
+    0% {
+        width: 12%;
+        transform: translateX(-10%);
+    }
+    50% {
+        width: 68%;
+        transform: translateX(35%);
+    }
+    100% {
+        width: 100%;
+        transform: translateX(0%);
+    }
+}
+
+.splash-loader-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #38BDF8 0%, #FACC15 100%);
+    box-shadow: 0 0 14px rgba(250, 204, 21, 0.65);
+    animation: auraSplashLoad 1.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.splash-status-text {
+    margin-top: 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748B;
+    letter-spacing: 0.3px;
+}
+
+.stats-pill {
+    background: rgba(13, 19, 28, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    color: #CBD5E1;
+    letter-spacing: 0.3px;
+}
+
+/* Tarjetas del Launcher estilo Playbox IPTV sobre OLED Black */
+.launcher-card-wrap {
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+}
+
+.launcher-card-wrap.focused {
+    transform: perspective(900px) rotateX(2deg) rotateY(-4deg) translateY(-7px) scale(1.03);
+    z-index: 10;
+}
+
+.launcher-card-bg {
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    background-color: #1A242B;
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.022) 0px,
+            rgba(255, 255, 255, 0.022) 24px,
+            transparent 24px,
+            transparent 48px
+        ),
+        linear-gradient(160deg, rgba(44, 62, 72, 0.72) 0%, rgba(22, 32, 39, 0.86) 100%);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
+    transition: box-shadow 0.22s ease, border-color 0.22s ease, background-image 0.22s ease;
+    overflow: hidden;
+}
+
+.launcher-card-bg.pill-card {
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    background-color: #111820;
+    background-image: linear-gradient(145deg, rgba(32, 46, 56, 0.72) 0%, rgba(16, 23, 30, 0.88) 100%);
+}
+
+.launcher-card-wrap.focused .launcher-card-bg {
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    background-image:
+        radial-gradient(circle at 46% 0%, rgba(250, 204, 21, 0.44) 0%, rgba(64, 128, 142, 0.56) 46%, rgba(28, 52, 62, 0.86) 100%),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.032) 0px,
+            rgba(255, 255, 255, 0.032) 24px,
+            transparent 24px,
+            transparent 48px
+        );
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.92), 0 -4px 26px rgba(250, 204, 21, 0.22);
+}
+
+.launcher-card-wrap.focused .launcher-card-bg.pill-card {
+    border: 1.5px solid rgba(250, 204, 21, 0.75);
+    background-image: linear-gradient(135deg, rgba(54, 92, 108, 0.92) 0%, rgba(26, 44, 54, 0.96) 100%);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.88), 0 0 18px rgba(250, 204, 21, 0.20);
+}
+
+/* Indicador superior luminoso estilo Playbox al enfocar una tarjeta */
+.launcher-top-bar {
+    position: absolute;
+    left: 29%;
+    top: -5px;
+    width: 42%;
+    height: 7px;
+    border-radius: 999px;
+    background: #FACC15;
+    box-shadow: 0 4px 18px rgba(250, 204, 21, 0.9);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.launcher-card-wrap.focused .launcher-top-bar {
+    opacity: 1;
+}
+
+.osd-banner {
+    opacity: 1;
+    transform: translateY(0px);
+    transition: opacity 0.38s ease, transform 0.38s ease;
+    will-change: opacity, transform;
+    z-index: 25;
+}
+
+.osd-banner.banner-hidden {
+    opacity: 0;
+    transform: translateY(18px);
+    pointer-events: none;
+}
+
+.osd-banner-surface {
+    background: rgba(220, 227, 239, 0.93);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 10px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+}
+
+/* Superposición limpia y sobria para estado de canal en vista previa y pantalla completa */
+.stream-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5, 8, 15, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    z-index: 35;
+}
+
+.stream-overlay-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 390px;
+}
+
+.stream-status-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1.5px solid rgba(56, 189, 248, 0.45);
+    color: #38BDF8;
+    font-size: 20px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.stream-status-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #F8FAFC;
+    margin-bottom: 6px;
+    line-height: 1.25;
+}
+
+.stream-status-sub {
+    font-size: 14px;
+    font-weight: 500;
+    color: #94A3B8;
+    line-height: 1.35;
+}
+
+.stream-overlay-full {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 66px;
+    background: rgba(8, 12, 22, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 14px;
+    padding: 14px 26px;
+    text-align: center;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75);
+    z-index: 35;
+}
+
+.stream-status-title-full {
+    font-size: 20px;
+    font-weight: 700;
+    color: #F8FAFC;
+}
+
+.stream-status-sub-full {
+    font-size: 14px;
+    font-weight: 500;
+    color: #94A3B8;
+    margin-top: 4px;
+}
+
+/* Tarjetas y filas con respuesta instantánea (0ms lag al mover D-Pad en listas de 20,000+ canales) */
+.ui-card,
+.ui-row-bg {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Iconos circulares limpios en Settings y listas */
+.setting-icon-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #38BDF8;
+}
+
+/* Mini-Guía lateral translúcida en pantalla completa */
+.mini-guide-drawer {
+    background: rgba(6, 10, 19, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 18px;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85);
+    z-index: 40;
+}
+
+/* Píldoras discretas de resolución, favorito y relación de aspecto en el banner OSD */
+.osd-meta-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(24, 34, 53, 0.12);
+    border: 1px solid rgba(24, 34, 53, 0.22);
+    color: #182235;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+}
+
+/* Recuadro superior derecho para cambio directo por número de canal (0-9) */
+.numeric-zap-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(6, 10, 19, 0.94);
+    border: 1.5px solid rgba(56, 189, 248, 0.55);
+    border-radius: 16px;
+    padding: 10px 18px;
+    text-align: center;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.85);
+    z-index: 55;
+}
+
+/* Notificación flotante tipo píldora */
+.aura-toast {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 13, 24, 0.94);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    border-radius: 999px;
+    color: #F8FAFC;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 0 22px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.78);
+    z-index: 60;
+}
+

@@ -1,0 +1,21 @@
+# Gradle files
+.gradle/
+build/
+app/build/
+
+# Local configuration file (sdk.dir, etc.)
+local.properties
+
+# Android Studio / IntelliJ IDEA
+*.iml
+.idea/
+.DS_Store
+*.swp
+*.keystore
+*.jks
+
+# External native build
+.externalNativeBuild/
+.cxx/
+captures/
+output-metadata.json
